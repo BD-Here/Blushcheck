@@ -14,14 +14,11 @@
 <main>
 <section class="hero"><span class="eyebrow">Beauty with a little more confidence</span><h1>Pretty products.<br><em>Smarter choices.</em></h1><p>Check makeup product information against live public databases and reliable reference sources. Made Just For Nandu.</p></section>
 <section class="panel">
-<h2>Check a makeup product</h2><p class="muted">Search the product database, enter an ingredient list, or upload a label photo. Barcode lookup is supported through the product database search field.</p>
-<div class="tabs"><button class="tab active" id="manualTab">Enter details</button><button class="tab" id="photoTab">Upload label photo</button></div>
-<div id="manual">
-<label for="productName">Product name / brand / barcode</label><input id="productName" placeholder="e.g. Maybelline Fit Me Foundation or barcode">
-<div class="actions"><button class="secondary" id="lookup">Find product in Open Beauty Facts ↗</button><span class="tiny">Live lookup · contributor-maintained database</span></div>
-<label for="ingredients">Ingredients (INCI list)</label><textarea id="ingredients" placeholder="Paste the full ingredient list from the product packaging..."></textarea>
-</div>
-<div id="photoPanel" class="hidden"><div class="upload"><b>📷 Upload a clear ingredient-label photo</b><p class="tiny">Text extraction runs in your browser. Check the result for mistakes.</p><input type="file" id="photo" accept="image/*" capture="environment"><img id="preview" alt="Label preview"><div class="status" id="ocrStatus"></div></div><label for="ocrText">Extracted text — please correct it</label><textarea id="ocrText" placeholder="Extracted ingredient text appears here"></textarea></div>
+<h2>Check a makeup product</h2><p class="muted">Start by uploading a photo of the front of your makeup product. BlushCheck will read its visible brand and product name, then search for its ingredients.</p>
+<div class="upload"><b>📷 Upload the front of your makeup product</b><p class="tiny">Keep the brand and product name visible. A clear, well-lit photo works best.</p><input type="file" id="photo" accept="image/*" capture="environment"><img id="preview" alt="Uploaded product photo"><div class="status" id="ocrStatus"></div></div>
+<div id="productMatch" class="hidden" style="margin-top:14px"></div>
+<div id="fallbackPanel" class="hidden" style="margin-top:18px"><div class="notice">We couldn't find a product record with its ingredients. Please upload a clear photo of the back label showing the ingredient list.</div><div class="upload"><b>📷 Upload the back ingredient label</b><p class="tiny">Make sure the small printed text is in focus and fills most of the photo.</p><input type="file" id="backPhoto" accept="image/*" capture="environment"><img id="backPreview" alt="Uploaded back label photo"><div class="status" id="backOcrStatus"></div></div><label for="ocrText">Ingredients read from the back label</label><textarea id="ocrText" placeholder="Detected ingredient text appears here. Please check for mistakes."></textarea><div class="actions"><button class="secondary" id="useBackIngredients">Use these ingredients</button></div></div>
+<div id="manualFallback" class="hidden" style="margin-top:14px"><label for="productName">Product name / barcode (optional fallback)</label><input id="productName" placeholder="e.g. Maybelline Fit Me Foundation"><div class="actions"><button class="secondary" id="lookup">Search product database</button></div><label for="ingredients">Or enter ingredients manually</label><textarea id="ingredients" placeholder="Only if the photo and database options don't work."></textarea></div>
 <div class="grid"><div><label for="region">Regulatory region</label><select id="region"><option>India</option><option>European Union</option><option>United States</option><option>United Kingdom</option><option>Other</option></select></div><div><label for="skin">Skin consideration</label><select id="skin"><option value="none">No known sensitivities</option><option value="sensitive">Sensitive skin</option><option value="fragrance">Fragrance sensitivity</option><option value="acne">Acne-prone</option><option value="eczema">Eczema-prone / impaired barrier</option></select></div></div>
 <div class="actions"><button class="primary" id="analyse">Analyse ingredients ✨</button><span class="tiny">No paid AI service or API key required for the included live lookups.</span></div>
 <div class="status" id="liveStatus"></div>
@@ -46,8 +43,38 @@
 <script>
 const $=id=>document.getElementById(id);
 let tab='manual';
-$('manualTab').onclick=()=>{tab='manual';$('manualTab').classList.add('active');$('photoTab').classList.remove('active');$('manual').classList.remove('hidden');$('photoPanel').classList.add('hidden')};
-$('photoTab').onclick=()=>{tab='photo';$('photoTab').classList.add('active');$('manualTab').classList.remove('active');$('photoPanel').classList.remove('hidden');$('manual').classList.add('hidden')};
+let ocrPromise=null;
+async function ensureOCR(){
+ if(ocrPromise)return ocrPromise;
+ ocrPromise=new Promise((resolve,reject)=>{if(window.Tesseract){resolve();return;}const s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js';s.onload=resolve;s.onerror=reject;document.head.appendChild(s)});
+ return ocrPromise;
+}
+async function readPhoto(file,previewId,statusId){
+ $(previewId).src=URL.createObjectURL(file);$(previewId).style.display='block';$(statusId).textContent='Loading text recognition…';await ensureOCR();$(statusId).textContent='Reading text from photo…';const r=await Tesseract.recognize(file,'eng');return r.data.text||'';
+}
+function searchPhrase(text){
+ const lines=text.split(/\n/).map(s=>s.trim()).filter(s=>s.length>2&&!/ingredients?|directions|warning|net wt|made in|expiry|manufactured|batch|www\.|https?:/i.test(s));
+ return lines.slice(0,5).join(' ').replace(/[^a-z0-9&' -]/gi,' ').replace(/\s+/g,' ').trim().slice(0,100);
+}
+async function findRecords(q){
+ const u='https://world.openbeautyfacts.org/cgi/search.pl?search_terms='+encodeURIComponent(q)+'&search_simple=1&action=process&json=1&page_size=12&fields=product_name,brands,code,ingredients_text,url,image_front_url';
+ const r=await fetch(u);if(!r.ok)throw Error('Database response '+r.status);const j=await r.json();return (j.products||[]).filter(p=>p.product_name&&p.ingredients_text&&p.ingredients_text.trim().length>5);
+}
+function showMatch(p,reason){
+ $('productName').value=[p.brands,p.product_name].filter(Boolean).join(' — ');$('ingredients').value=p.ingredients_text||'';$('productMatch').classList.remove('hidden');
+ $('productMatch').innerHTML=`<div class="mini"><b>Possible product match</b><p>${esc([p.brands,p.product_name].filter(Boolean).join(' — '))}</p>${p.image_front_url?`<img src="${esc(p.image_front_url)}" alt="Matched product image" style="display:block;max-width:130px;max-height:150px;object-fit:contain;margin:10px 0">`:''}<p>${reason}. Compare this candidate with your actual packaging before continuing.</p>${p.url?`<p><a target="_blank" rel="noopener" href="${esc(p.url)}">View product database record</a></p>`:''}<p class="tiny">Ingredient data is community-contributed and may be incomplete or outdated.</p></div>`;
+ $('fallbackPanel').classList.add('hidden');$('manualFallback').classList.add('hidden');$('ocrStatus').textContent='Product record found with an ingredient list. Run the analysis when ready.';
+}
+async function trySearch(q,reason){if(!q||q.length<3)return false;const ps=await findRecords(q);if(!ps.length)return false;showMatch(ps[0],reason);return true;}
+$('photo').addEventListener('change',async e=>{
+ const f=e.target.files[0];if(!f)return;$('productMatch').classList.add('hidden');$('fallbackPanel').classList.add('hidden');$('manualFallback').classList.add('hidden');
+ try{const text=await readPhoto(f,'preview','ocrStatus');const q=searchPhrase(text);if(!q){$('ocrStatus').textContent='Could not read the product name clearly. Please try a clearer photo.';}else{$('ocrStatus').textContent='Reading product details: '+q+' — searching records…';if(await trySearch(q,'Candidate found from text on the front photo'))return;$('ocrStatus').textContent='No matching product record with ingredients was found.';} $('fallbackPanel').classList.remove('hidden');$('manualFallback').classList.remove('hidden');}
+ catch(err){$('ocrStatus').textContent='Text recognition could not start. Try again or use the optional product-name search.';$('fallbackPanel').classList.remove('hidden');$('manualFallback').classList.remove('hidden');}
+});
+$('backPhoto').addEventListener('change',async e=>{
+ const f=e.target.files[0];if(!f)return;try{const text=await readPhoto(f,'backPreview','backOcrStatus');$('ocrText').value=text;$('backOcrStatus').textContent='Text extracted. Review and correct it before using the ingredients.';}catch(err){$('backOcrStatus').textContent='Could not read this photo. Try a closer, sharper, well-lit image.';}
+});
+$('useBackIngredients').onclick=()=>{const v=$('ocrText').value.trim();if(!v){alert('No text was extracted. Upload the back label again.');return;}$('ingredients').value=v;$('productMatch').classList.remove('hidden');$('productMatch').innerHTML='<div class="mini"><b>Back-label text ready</b><p>Review the extracted text. OCR can make mistakes; correct it before analysis.</p></div>';$('backOcrStatus').textContent='Ingredients selected. You can now run the analysis.';};
 const rules=[
 {re:/^parfum$|fragrance/i,level:'Moderate',why:'Fragrance mixtures can contain multiple sensitising substances; exact components may not be disclosed.',effect:'Possible irritation, itching or allergic contact dermatitis.',points:10},
 {re:/limonene|linalool|citral|eugenol|geraniol|coumarin/i,level:'Moderate',why:'Recognised fragrance allergens; oxidation and individual sensitivity can increase reaction risk.',effect:'Possible allergic contact dermatitis or irritation.',points:8},
@@ -65,17 +92,10 @@ function ruleFor(s){return rules.find(r=>r.re.test(s))||null}
 function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function link(q,label){return `<a target="_blank" rel="noopener" href="https://www.google.com/search?q=${encodeURIComponent(q)}">${label}</a> · `}
 async function lookupProduct(){
- const q=$('productName').value.trim();if(!q){alert('Enter a product name, brand or barcode first.');return}
- $('liveStatus').textContent='Searching Open Beauty Facts…';
- try{
-  const url='https://world.openbeautyfacts.org/cgi/search.pl?search_terms='+encodeURIComponent(q)+'&search_simple=1&action=process&json=1&page_size=8&fields=product_name,brands,code,ingredients_text,url,image_front_url';
-  const res=await fetch(url);if(!res.ok)throw Error('Database response '+res.status);
-  const data=await res.json();const products=data.products||[];
-  if(!products.length){$('liveStatus').textContent='No matching product found. You can still paste the ingredient list manually.';return}
-  const p=products[0];$('productName').value=[p.brands,p.product_name].filter(Boolean).join(' — ')||q;
-  $('ingredients').value=p.ingredients_text||'';
-  $('liveStatus').innerHTML='Found a community database match: <a target="_blank" rel="noopener" href="'+esc(p.url||'https://world.openbeautyfacts.org')+'">open product record</a>. Please compare it with your package.';
- }catch(e){$('liveStatus').textContent='Could not reach Open Beauty Facts right now. Try again later or paste ingredients manually.'}
+ const q=$('productName').value.trim();if(!q){alert('Enter a product name or barcode first.');return;}
+ $('ocrStatus').textContent='Searching the product database…';
+ try{if(!await trySearch(q,'Candidate found by product-name search')){$('ocrStatus').textContent='No product record with ingredients found. Please upload the back ingredient label.';$('fallbackPanel').classList.remove('hidden');}}
+ catch(e){$('ocrStatus').textContent='Could not reach the product database. Try again later or upload the back label.';$('fallbackPanel').classList.remove('hidden');}
 }
 $('lookup').onclick=lookupProduct;
 $('photo').addEventListener('change',async e=>{
@@ -89,8 +109,8 @@ async function pubchem(name){
  try{const r=await fetch(url);if(!r.ok)return null;const j=await r.json();const p=j.PropertyTable?.Properties?.[0];return p?{...p,url:'https://pubchem.ncbi.nlm.nih.gov/#query='+encodeURIComponent(name)}:null}catch(e){return null}
 }
 async function analyse(){
- const raw=tab==='photo'?$('ocrText').value:$('ingredients').value;
- if(!raw.trim()){alert('Please enter ingredients or look up a product first.');return}
+ const raw=$('ingredients').value.trim() || $('ocrText').value.trim();
+ if(!raw.trim()){alert('No ingredient list is available yet. Upload the back ingredient label or search by product name.');return}
  const names=parseIngredients(raw);if(!names.length){alert('No ingredients could be identified. Paste the INCI ingredient list.');return}
  $('liveStatus').textContent='Checking ingredient identities against PubChem…';
  const skin=$('skin').value;let deductions=0;
