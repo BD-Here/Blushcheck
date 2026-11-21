@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#f8dce9"><title>BlushCheck — Made Just For Nandu</title>
+<style>
+:root{--pink:#df75a4;--deep:#a33d70;--pale:#fff1f7;--ink:#382633;--muted:#806d79;--line:#efd5e1;--green:#267452;--amber:#986117;--red:#ad4050}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(145deg,#fff8fb,#fbeaf2 58%,#fff);color:var(--ink);font:15px/1.55 system-ui,-apple-system,Segoe UI,sans-serif}header{max-width:1100px;margin:auto;padding:22px 20px;display:flex;justify-content:space-between;align-items:center}.logo{font-size:1.45rem;font-weight:900;color:var(--deep)}.logo span{color:var(--pink)}.by{font-size:.82rem;color:var(--muted)}main{max-width:1100px;margin:auto;padding:12px 20px 55px}.hero{text-align:center;padding:34px 8px}.eyebrow{display:inline-block;background:#ffe2ee;color:var(--deep);padding:6px 13px;border-radius:30px;font-size:.76rem;font-weight:800;letter-spacing:.07em;text-transform:uppercase}.hero h1{font-size:clamp(2.2rem,6vw,4rem);line-height:1.05;letter-spacing:-2px;margin:17px 0 10px}.hero h1 em{font-style:normal;color:var(--deep)}.hero p{max-width:670px;margin:auto;color:var(--muted)}.panel{background:#fff;border:1px solid var(--line);border-radius:22px;padding:clamp(18px,3vw,28px);box-shadow:0 14px 40px #8e476311;margin:18px 0}.panel h2{font-size:1.12rem;margin:0 0 6px}.muted{color:var(--muted);font-size:.88rem;margin:0 0 16px}.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:15px 0}.tab,button{cursor:pointer}.tab{border:1px solid var(--line);background:#fff8fb;color:var(--deep);padding:9px 15px;border-radius:30px;font-weight:750}.tab.active{background:var(--deep);color:white}label{display:block;font-weight:750;font-size:.87rem;margin:12px 0 6px}input,textarea,select{width:100%;padding:12px 13px;border:1px solid #e8cbd8;border-radius:12px;background:white;color:var(--ink);font:inherit}textarea{min-height:120px;resize:vertical}.grid{display:grid;grid-template-columns:1fr 1fr;gap:13px}.upload{border:2px dashed #e7b8cd;border-radius:15px;background:#fff8fb;padding:18px;text-align:center}.upload img{display:none;max-width:170px;max-height:150px;object-fit:contain;margin:10px auto;border-radius:10px}.primary{border:0;border-radius:30px;background:linear-gradient(100deg,#d85f96,#a33d70);color:white;font-weight:850;padding:13px 22px;box-shadow:0 8px 20px #a33d7030}.secondary{border:1px solid var(--line);border-radius:30px;padding:11px 17px;background:white;color:var(--deep);font-weight:750}.actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:17px}.tiny{font-size:.77rem;color:var(--muted)}#results{display:none}.scorehead{display:flex;gap:18px;align-items:center;flex-wrap:wrap}.score{width:105px;height:105px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--pink) var(--score),#f7e7ee 0);position:relative}.score:before{content:"";position:absolute;inset:8px;background:white;border-radius:50%}.score strong{z-index:1;font-size:1.65rem}.score small{display:block;text-align:center;font-size:.62rem;color:var(--muted)}.verdict{font-size:1.28rem;color:var(--deep);font-weight:900}.cards{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin:18px 0}.mini{border:1px solid var(--line);background:#fff8fb;border-radius:14px;padding:14px}.mini b{display:block;margin-bottom:4px}.mini p{font-size:.85rem;color:var(--muted);margin:0}.notice{background:#fff2d9;color:#79551d;padding:12px 14px;border-radius:12px;font-size:.84rem;margin:16px 0}.source{padding:12px 0;border-bottom:1px solid var(--line)}.source:last-child{border:0}.source a,.links a{color:var(--deep);font-weight:750;text-decoration:none}.source a:hover,.links a:hover{text-decoration:underline}.source small{display:block;color:var(--muted);font-size:.78rem}.tag{font-size:.7rem;font-weight:850;border-radius:20px;padding:4px 8px;white-space:nowrap}.low{background:#e4f5ec;color:var(--green)}.moderate{background:#fff0d7;color:var(--amber)}.high{background:#fde5e8;color:var(--red)}.ingredient{display:flex;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}.ingredient small{display:block;color:var(--muted);font-size:.82rem}.status{font-size:.82rem;color:var(--muted);margin-top:8px}.hidden{display:none!important}footer{text-align:center;color:var(--muted);font-size:.78rem;padding:25px}
+@media(max-width:640px){header{padding:17px 15px}main{padding:5px 13px 35px}.hero{padding:25px 3px}.hero h1{letter-spacing:-1px}.grid,.cards{grid-template-columns:1fr}.panel{border-radius:17px}.scorehead{align-items:flex-start}}
+</style>
+</head>
+<body>
+<header><div class="logo">Blush<span>Check</span> ♡</div><div class="by">Founder: <b>BD</b></div></header>
+<main>
+<section class="hero"><span class="eyebrow">Beauty with a little more confidence</span><h1>Pretty products.<br><em>Smarter choices.</em></h1><p>Check makeup product information against live public databases and reliable reference sources. Made Just For Nandu.</p></section>
+<section class="panel">
+<h2>Check a makeup product</h2><p class="muted">Search the product database, enter an ingredient list, or upload a label photo. Barcode lookup is supported through the product database search field.</p>
+<div class="tabs"><button class="tab active" id="manualTab">Enter details</button><button class="tab" id="photoTab">Upload label photo</button></div>
+<div id="manual">
+<label for="productName">Product name / brand / barcode</label><input id="productName" placeholder="e.g. Maybelline Fit Me Foundation or barcode">
+<div class="actions"><button class="secondary" id="lookup">Find product in Open Beauty Facts ↗</button><span class="tiny">Live lookup · contributor-maintained database</span></div>
+<label for="ingredients">Ingredients (INCI list)</label><textarea id="ingredients" placeholder="Paste the full ingredient list from the product packaging..."></textarea>
+</div>
+<div id="photoPanel" class="hidden"><div class="upload"><b>📷 Upload a clear ingredient-label photo</b><p class="tiny">Text extraction runs in your browser. Check the result for mistakes.</p><input type="file" id="photo" accept="image/*" capture="environment"><img id="preview" alt="Label preview"><div class="status" id="ocrStatus"></div></div><label for="ocrText">Extracted text — please correct it</label><textarea id="ocrText" placeholder="Extracted ingredient text appears here"></textarea></div>
+<div class="grid"><div><label for="region">Regulatory region</label><select id="region"><option>India</option><option>European Union</option><option>United States</option><option>United Kingdom</option><option>Other</option></select></div><div><label for="skin">Skin consideration</label><select id="skin"><option value="none">No known sensitivities</option><option value="sensitive">Sensitive skin</option><option value="fragrance">Fragrance sensitivity</option><option value="acne">Acne-prone</option><option value="eczema">Eczema-prone / impaired barrier</option></select></div></div>
+<div class="actions"><button class="primary" id="analyse">Analyse ingredients ✨</button><span class="tiny">No paid AI service or API key required for the included live lookups.</span></div>
+<div class="status" id="liveStatus"></div>
+</section>
+<section class="panel" id="results">
+<h2>BlushCheck report</h2><p class="muted" id="reportName"></p>
+<div class="scorehead"><div class="score" id="scoreCircle"><strong><span id="score">—</span><small>/ 100</small></strong></div><div><div class="verdict" id="verdict">Review needed</div><div class="tiny" id="scoreNote"></div></div></div>
+<div class="notice" id="caveat"></div>
+<div class="cards">
+<div class="mini"><b>Ingredient screening</b><p id="ingredientSummary"></p></div>
+<div class="mini"><b>Allergy considerations</b><p id="allergySummary"></p></div>
+<div class="mini"><b>Possible effects</b><p id="effectsSummary"></p></div>
+<div class="mini"><b>Regulatory check</b><p id="regSummary"></p></div>
+</div>
+<h2>Ingredient details</h2><div id="ingredientResults"></div>
+<h2 style="margin-top:24px">Live source results</h2><p class="muted">These records are retrieved when you run an analysis. A missing result means no match was returned, not that an ingredient is safe.</p><div id="liveSources"></div>
+<h2 style="margin-top:24px">Further verification</h2><div class="links" id="researchLinks"></div>
+</section>
+<section class="panel"><h2>What the live sources can and cannot tell you</h2><p class="muted" style="margin-bottom:0">Open Beauty Facts is a community-maintained product-label database. PubChem provides chemical identity information, not a cosmetic safety verdict. EU CosIng is an informative ingredient database and does not itself approve an ingredient for use. Customer complaints and adverse events are not comprehensively available through a free public API here, so BlushCheck links to searches rather than inventing review counts. A real safety determination also needs concentrations, product type, exposure and a qualified product safety assessment.</p></section>
+</main>
+<footer>Made Just For Nandu ♡ · Founder BD<br>Educational screening only — not medical advice or regulatory certification.</footer>
+<script>
+const $=id=>document.getElementById(id);
+let tab='manual';
+$('manualTab').onclick=()=>{tab='manual';$('manualTab').classList.add('active');$('photoTab').classList.remove('active');$('manual').classList.remove('hidden');$('photoPanel').classList.add('hidden')};
+$('photoTab').onclick=()=>{tab='photo';$('photoTab').classList.add('active');$('manualTab').classList.remove('active');$('photoPanel').classList.remove('hidden');$('manual').classList.add('hidden')};
+const rules=[
+{re:/^parfum$|fragrance/i,level:'Moderate',why:'Fragrance mixtures can contain multiple sensitising substances; exact components may not be disclosed.',effect:'Possible irritation, itching or allergic contact dermatitis.',points:10},
+{re:/limonene|linalool|citral|eugenol|geraniol|coumarin/i,level:'Moderate',why:'Recognised fragrance allergens; oxidation and individual sensitivity can increase reaction risk.',effect:'Possible allergic contact dermatitis or irritation.',points:8},
+{re:/methylisothiazolinone|methylchloroisothiazolinone/i,level:'High',why:'Strong contact sensitiser. Permitted uses are restricted and depend on product type and jurisdiction.',effect:'Allergic contact dermatitis, rash and itching.',points:22},
+{re:/formaldehyde|quaternium-15|dmdm hydantoin|imidazolidinyl urea|diazolidinyl urea/i,level:'High',why:'Formaldehyde or formaldehyde-releasing preservatives can sensitise some users; jurisdictional restrictions vary.',effect:'Irritation or allergic contact dermatitis.',points:18},
+{re:/alcohol denat|denatured alcohol/i,level:'Moderate',why:'Can be drying or irritating, especially in high amounts or on a damaged skin barrier.',effect:'Dryness, tightness or stinging.',points:5},
+{re:/retinol|retinyl palmitate|retinal/i,level:'Moderate',why:'Retinoids may irritate skin; topical retinoids are generally avoided during pregnancy as a precaution.',effect:'Dryness, peeling, redness and sensitivity.',points:7},
+{re:/salicylic acid/i,level:'Moderate',why:'Concentration, product type and use area matter; can irritate or dry skin.',effect:'Dryness, peeling or stinging.',points:5},
+{re:/oxybenzone|benzophenone-3/i,level:'Moderate',why:'Sunscreen filter with region-specific conditions and potential contact/photoallergy in some users.',effect:'Possible irritation or photoallergic reaction.',points:6},
+{re:/phenoxyethanol|methylparaben|ethylparaben|propylparaben|butylparaben/i,level:'Low',why:'Common preservatives with regulated use limits in many jurisdictions; the exact formula and concentration matter.',effect:'Sensitivity is possible but uncommon.',points:1},
+{re:/glycerin|aqua|water|niacinamide|hyaluronic acid|sodium hyaluronate/i,level:'Low',why:'Common cosmetic ingredients; their presence alone is not a safety concern for most users.',effect:'Individual reactions remain possible.',points:0}
+];
+function parseIngredients(t){return [...new Set(t.replace(/ingredients?\s*:/ig,'').replace(/\n/g,',').split(/[,;•|]+/).map(x=>x.trim()).filter(x=>x.length>1&&x.length<100&&!/^(directions|warning|how to use|net wt)/i.test(x)))].slice(0,60)}
+function ruleFor(s){return rules.find(r=>r.re.test(s))||null}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function link(q,label){return `<a target="_blank" rel="noopener" href="https://www.google.com/search?q=${encodeURIComponent(q)}">${label}</a> · `}
+async function lookupProduct(){
+ const q=$('productName').value.trim();if(!q){alert('Enter a product name, brand or barcode first.');return}
+ $('liveStatus').textContent='Searching Open Beauty Facts…';
+ try{
+  const url='https://world.openbeautyfacts.org/cgi/search.pl?search_terms='+encodeURIComponent(q)+'&search_simple=1&action=process&json=1&page_size=8&fields=product_name,brands,code,ingredients_text,url,image_front_url';
+  const res=await fetch(url);if(!res.ok)throw Error('Database response '+res.status);
+  const data=await res.json();const products=data.products||[];
+  if(!products.length){$('liveStatus').textContent='No matching product found. You can still paste the ingredient list manually.';return}
+  const p=products[0];$('productName').value=[p.brands,p.product_name].filter(Boolean).join(' — ')||q;
+  $('ingredients').value=p.ingredients_text||'';
+  $('liveStatus').innerHTML='Found a community database match: <a target="_blank" rel="noopener" href="'+esc(p.url||'https://world.openbeautyfacts.org')+'">open product record</a>. Please compare it with your package.';
+ }catch(e){$('liveStatus').textContent='Could not reach Open Beauty Facts right now. Try again later or paste ingredients manually.'}
+}
+$('lookup').onclick=lookupProduct;
+$('photo').addEventListener('change',async e=>{
+ const f=e.target.files[0];if(!f)return;$('preview').src=URL.createObjectURL(f);$('preview').style.display='block';$('ocrStatus').textContent='Loading OCR engine…';
+ try{if(!window.Tesseract)await new Promise((ok,no)=>{let s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js';s.onload=ok;s.onerror=no;document.head.appendChild(s)});
+ $('ocrStatus').textContent='Reading label…';let r=await Tesseract.recognize(f,'eng');$('ocrText').value=r.data.text;$('ocrStatus').textContent='Text extracted — review and correct it before analysis.'}
+ catch(e){$('ocrStatus').textContent='OCR unavailable. Please type the ingredient list manually.'}
+});
+async function pubchem(name){
+ const url='https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/'+encodeURIComponent(name)+'/property/IUPACName,MolecularFormula/JSON';
+ try{const r=await fetch(url);if(!r.ok)return null;const j=await r.json();const p=j.PropertyTable?.Properties?.[0];return p?{...p,url:'https://pubchem.ncbi.nlm.nih.gov/#query='+encodeURIComponent(name)}:null}catch(e){return null}
+}
+async function analyse(){
+ const raw=tab==='photo'?$('ocrText').value:$('ingredients').value;
+ if(!raw.trim()){alert('Please enter ingredients or look up a product first.');return}
+ const names=parseIngredients(raw);if(!names.length){alert('No ingredients could be identified. Paste the INCI ingredient list.');return}
+ $('liveStatus').textContent='Checking ingredient identities against PubChem…';
+ const skin=$('skin').value;let deductions=0;
+ const reviewed=names.map(n=>({name:n,rule:ruleFor(n)}));
+ reviewed.forEach(x=>{if(x.rule)deductions+=x.rule.points});
+ if(skin==='sensitive')deductions+=6;
+ if(skin==='fragrance'&&reviewed.some(x=>/parfum|fragrance|limonene|linalool|citral|eugenol|geraniol/i.test(x.name)))deductions+=10;
+ if(skin==='eczema'&&reviewed.some(x=>x.rule?.level==='Moderate'||x.rule?.level==='High'))deductions+=6;
+ const score=Math.max(0,100-deductions);
+ const high=reviewed.filter(x=>x.rule?.level==='High').length,mod=reviewed.filter(x=>x.rule?.level==='Moderate').length,low=reviewed.filter(x=>x.rule?.level==='Low').length;
+ let verdict=score>=90?'Lower concern based on this screen':score>=75?'Kinda safe — check sensitivities':score>=55?'Not recommended for everyone':score>=30?'Risky — review before use':'High concern — avoid pending expert review';
+ $('reportName').textContent=$('productName').value||'User-entered ingredient list';
+ $('score').textContent=score;$('scoreCircle').style.setProperty('--score',score+'%');$('verdict').textContent=verdict;$('scoreNote').textContent=`Heuristic screening only · ${names.length} ingredient names`;
+ $('caveat').textContent='This score is NOT a validated toxicity score, and cannot establish that a product is safe or unsafe. The rules are preliminary flags, not a substitute for concentration-specific toxicology, full formulation review or professional advice. An unrecognised ingredient is not automatically safe. No banned chemical can be confirmed solely from this text scan.';
+ $('ingredientSummary').textContent=`${names.length} names parsed: ${high} high-concern pattern matches, ${mod} moderate, ${low} lower-concern patterns, and ${names.length-high-mod-low} not covered by the built-in screening rules.`;
+ $('allergySummary').textContent=skin==='none'?'No specific sensitivity selected. Allergies can still occur in anyone.':`Selected consideration: ${skin}. This can highlight potential concerns but cannot predict your personal reaction.`;
+ $('effectsSummary').textContent=[...new Set(reviewed.filter(x=>x.rule).map(x=>x.rule.effect))].join(' ')||'No possible effects were matched by the preliminary rules. Absence of a match does not prove absence of risk.';
+ $('regSummary').textContent='Not legally verified. Search the selected region’s official regulations below. Restrictions depend on ingredient identity, concentration, product category and conditions of use; an ingredient appearing in an inventory does not mean it is approved.';
+ $('ingredientResults').innerHTML=reviewed.map(x=>{let r=x.rule;let cls=!r?'low':r.level==='High'?'high':r.level==='Moderate'?'moderate':'low';return `<div class="ingredient"><div><b>${esc(x.name)}</b><small>${r?esc(r.why):'No built-in assessment. Use the PubChem identity result and official regulatory sources below; do not infer safety from a missing match.'}</small></div><span class="tag ${cls}">${r?r.level:'Unassessed'}</span></div>`}).join('');
+ $('liveSources').innerHTML='<p class="status">Fetching live chemical identity matches…</p>';
+ $('results').style.display='block';$('results').scrollIntoView({behavior:'smooth',block:'start'});
+ // Small batches avoid hammering a public service. PubChem is chemical identity, not safety scoring.
+ const targets=names.slice(0,12);const results=[];
+ for(let i=0;i<targets.length;i+=4){const batch=await Promise.all(targets.slice(i,i+4).map(async n=>({name:n,data:await pubchem(n)})));results.push(...batch)}
+ $('liveSources').innerHTML=results.map(x=>x.data?`<div class="source"><b>${esc(x.name)}</b><small>PubChem match: ${esc(x.data.MolecularFormula||'Formula unavailable')} · ${esc(x.data.IUPACName||'IUPAC name unavailable')} · <a target="_blank" rel="noopener" href="${x.data.url}">Open PubChem record</a></small></div>`:`<div class="source"><b>${esc(x.name)}</b><small>No exact PubChem identity match returned. Check spelling / INCI synonym manually. <a target="_blank" rel="noopener" href="https://pubchem.ncbi.nlm.nih.gov/#query=${encodeURIComponent(x.name)}">Search PubChem</a></small></div>`).join('')+`<p class="tiny">PubChem identity lookup is live. A PubChem match is not a finding that an ingredient is safe for cosmetic use.</p>`;
+ const region=$('region').value,prod=$('productName').value||'cosmetic product';
+ $('researchLinks').innerHTML=
+ link(`${prod} customer reviews complaints allergic reaction adverse events`,'Customer reviews & reported reactions')+
+ link(`${prod} ingredients safety recall warning`,'Product safety / recall search')+
+ link(`site:cdsco.gov.in cosmetics prohibited ingredients India`,'India CDSCO regulations')+
+ link(`site:ec.europa.eu cosmetics regulation Annex II Annex III ingredient ${names.join(' ')}`,'EU cosmetics restrictions')+
+ link(`site:fda.gov cosmetics adverse reactions ingredients`,'US FDA cosmetics information')+
+ link(`${names.join(' ')} cosmetic safety scientific review CIR SCCS`,'Scientific ingredient assessments')+
+ `<a target="_blank" rel="noopener" href="https://single-market-economy.ec.europa.eu/sectors/cosmetics/cosmetic-ingredient-database_en">EU CosIng database</a>`;
+ $('liveStatus').textContent='Analysis complete. Live product lookup and PubChem identity checks are shown in the report; regulatory and customer-report verification links are provided separately.';
+}
+$('analyse').onclick=analyse;
+</script>
+</body></html>
